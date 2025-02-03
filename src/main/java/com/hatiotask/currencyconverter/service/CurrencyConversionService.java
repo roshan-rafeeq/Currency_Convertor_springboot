@@ -12,6 +12,10 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.io.IOException;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+
 @Service
 public class CurrencyConversionService {
     private final ExchangeRateConfig config;
@@ -26,16 +30,19 @@ public class CurrencyConversionService {
 
     public CurrencyConversionDTO convertCurrency(String fromCurrency, String toCurrency, BigDecimal amount) {
         try {
+            log.info("Converting {} {} to {}", amount, fromCurrency, toCurrency);
             String fullApiUrl = buildApiUrl(fromCurrency);
             String response = fetchExchangeRates(fullApiUrl);
             JsonNode rootNode = parseResponse(response);
 
             BigDecimal exchangeRate = extractExchangeRate(rootNode, toCurrency);
             BigDecimal convertedAmount = calculateConvertedAmount(amount, exchangeRate);
-
+            log.info("Conversion successful: {} {} = {} {}",
+                    amount, fromCurrency, convertedAmount, toCurrency);
             return createConversionDTO(fromCurrency, toCurrency, amount, convertedAmount, exchangeRate);
 
         } catch (Exception e) {
+            log.error("Conversion error: {}", e.getMessage());
             throw new CurrencyConversionException("Currency conversion failed: " + e.getMessage());
         }
     }
