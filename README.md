@@ -53,6 +53,16 @@ Once the application is running, access Swagger UI at:
 Run all JUnit tests with:
 ## mvn test
 
+## SCREENSHOTS
+
+### Swagger UI
+![Swagger UI](images/Screenshot1.png)
+
+### API Response Example
+![API Response](images/Screenshot2.png)
+
+### API Response Example
+![API Response](images/Screenshot3.png)
 
 ### License
 
