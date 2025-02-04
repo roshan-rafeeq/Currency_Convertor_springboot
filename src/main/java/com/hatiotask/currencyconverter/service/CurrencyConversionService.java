@@ -1,10 +1,14 @@
 package com.hatiotask.currencyconverter.service;
 
+import org.springframework.beans.factory.annotation.Qualifier;
+
 import com.hatiotask.currencyconverter.config.ExchangeRateConfig;
 import com.hatiotask.currencyconverter.dto.CurrencyConversionDTO;
 import com.hatiotask.currencyconverter.exception.CurrencyConversionException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.JsonNode;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
@@ -19,12 +23,13 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class CurrencyConversionService {
     private final ExchangeRateConfig config;
-    private final RestClient restClient;
-    private final ObjectMapper objectMapper;
 
-    public CurrencyConversionService(ExchangeRateConfig config) {
+    private final ObjectMapper objectMapper;
+    @Autowired
+    private RestClient restClient;
+
+    public CurrencyConversionService(@Qualifier("exchangeRateConfig") ExchangeRateConfig config) {
         this.config = config;
-        this.restClient = RestClient.create();
         this.objectMapper = new ObjectMapper();
     }
 
@@ -49,7 +54,7 @@ public class CurrencyConversionService {
 
     private String buildApiUrl(String fromCurrency) {
         return String.format("%s/%s/latest/%s",
-                config.getApiUrl(),
+                config.getApiUrl().stripTrailing(),
                 config.getApiKey(),
                 fromCurrency);
     }

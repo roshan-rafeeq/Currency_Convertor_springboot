@@ -21,7 +21,8 @@ public class SwaggerConfig {
     public GroupedOpenApi publicApi() {
         return GroupedOpenApi.builder()
                 .group("currency-converter")
-                .pathsToMatch("/api/**")
+                .packagesToScan("com.hatiotask.currencyconverter.controller")
+                .pathsToMatch("/api/currency/**")
                 .build();
     }
 }
